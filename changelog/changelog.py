@@ -1,21 +1,20 @@
 import sys
+import os
 from git import *
 from datetime import date
 
 
 class Changelog:
-    def __init__(self, commits, version):
+    def __init__(self, version):
         self.version = version
         self.added = []
         self.changed = []
         self.fixed = []
         self.removed = []
-        self.commits = commits
-
-    def prepare(self):
-        for commit in self.commits:
-            print("Sha: " + commit.sha)
-            print("Message: " + commit.message)
+        self.url = ''
+        
+    def parse(self, commits):
+        for commit in commits:
             if '[ADD]' in commit.message:
                 commit.message = commit.message.split(
                     '[ADD]')[1].strip().split('\n')[0]
@@ -34,7 +33,7 @@ class Changelog:
                 self.removed.append(commit)
 
     def __str__(self):
-        result = "# Change Log \n\n## " + self.version + \
+        result = "## " + self.version + \
             " ({})".format(date.today()) + '\n'
         result = result + "\n### Added:\n\n"
         for commit in self.added:
@@ -56,5 +55,12 @@ class Changelog:
         return result
 
     def saveToFile(self):
-        with open('CHANGELOG.md', 'w') as file:
+        #append file!
+        with open('CHANGELOG.md', 'r+') as file:
+            firstLine = file.readline()
+            file.seek(len(firstLine), 0)
+            content = file.read()
+            file.seek(0, 0)
+            file.write("# Changelog \n\n")
             file.write(str(self))
+            file.write(content)
