@@ -1,5 +1,5 @@
 import subprocess
-
+import json
 
 class Git:
     def __init__(self, directory):
@@ -22,21 +22,13 @@ class Git:
             return url
 
     def getCommits(self):
-        process = subprocess.Popen(['git', 'log', '--pretty=tformat:"%h %B"'],
+        process = subprocess.Popen(['git', 'log', '--pretty=tformat:"{\"Sha\":\"%h\", \"Message\":\"%B\"}"'],
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.directory)
         out, err = process.communicate()
         commits = []
-        for row in out.decode('utf-8').split('\n'):
-            if row:
-                if row[0] == '"':
-                    commits.append(Commit(row[1:7], row[8:], self.url))
-                else:
-                    commits.append(
-                        Commit(commits[-1].sha, row, self.url))
+        output = out.decode('utf-8').replace('\n','\\n').replace('}"\\n"{', '}, {').replace('"{','[{').replace('}"','}]')[:-2]
+        jsonCommits = json.loads(output)
+        for commit in jsonCommits:
+            commits.append(commit)    
         return commits
 
-class Commit:
-    def __init__(self, sha, message, url):
-        self.sha = sha
-        self.url = url[:-4] + '/commit/' + self.sha
-        self.message = message
