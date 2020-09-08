@@ -4,17 +4,16 @@ from datetime import date
 
 
 class Changelog:
-    def __init__(self, repo, version):
+    def __init__(self, commits, version):
         self.version = version
         self.added = []
         self.changed = []
         self.fixed = []
         self.removed = []
-        self.repo = repo
+        self.commits = commits
 
     def prepare(self):
-        self.repo.getCommits()
-        for commit in self.repo.commits:
+        for commit in self.commits:
             print("Sha: " + commit.sha)
             print("Message: " + commit.message)
             if '[ADD]' in commit.message:

@@ -1,2 +1,7 @@
 .vscode/
 CHANGELOG.md
+GenerateClog.egg-info/
+dist/
+build/
+*/*.pyc
+*/__pycache__
