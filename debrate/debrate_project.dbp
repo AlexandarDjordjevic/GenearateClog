@@ -1,0 +1,42 @@
+[DEBREATE-0.7.13]
+<<CTRL>>
+Package: clgenerator
+Version: 1.0.0
+Maintainer: Aleksandar Djordjevic <aleksandars.djordjevic@rt-rk.com>
+Architecture: amd64
+Priority: optional
+
+<</CTRL>>
+<<FILES>>
+0
+<</FILES>>
+<<SCRIPTS>>
+<<PREINST>>
+0
+<</PREINST>>
+<<POSTINST>>
+0
+<</POSTINST>>
+<<PRERM>>
+0
+<</PRERM>>
+<<POSTRM>>
+0
+<</POSTRM>>
+<</SCRIPTS>>
+<<CHANGELOG>>
+<<DEST>>DEFAULT<</DEST>>
+
+<</CHANGELOG>>
+<<COPYRIGHT>>
+
+<</COPYRIGHT>>
+<<MENU>>
+0
+<</MENU>>
+<<BUILD>>
+1
+1
+1
+strip
+<</BUILD>>

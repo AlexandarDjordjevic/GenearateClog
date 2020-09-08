@@ -1,0 +1,5 @@
+Package: clgenerator
+Version: 1.0.0
+Maintainer: Aleksandar Djordjevic <aleksandars.djordjevic@rt-rk.com>
+Architecture: amd64
+Priority: optional

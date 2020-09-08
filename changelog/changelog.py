@@ -15,7 +15,15 @@ class Changelog:
         
     def parse(self, commits):
         for commit in commits:
-            for message in commit['Message'].split('\n'):           
+            for message in commit['Message'].split('\n'):
+                if '[RM]' in message:
+                    parts = message.split(' ')
+                    message = ''
+                    for part in parts:
+                        if '[RM]' in part:
+                            issue = part.split(']')[1]
+                            part = "[RM{}](https://redmine.iwedia.com/issues/{})".format(issue, issue)
+                        message = message + " " + part
                 if '[ADD]' in message:
                     message = message.split(
                         '[ADD]')[1].strip()
@@ -32,7 +40,9 @@ class Changelog:
                     message = message.split(
                         '[REMOVE]')[1].strip()
                     self.removed.append({'message':message, 'sha':commit['Sha']})
-
+                
+                    
+                
     def __str__(self):
         result = "## " + '[{}]({}/releases/tag/{})'.format(self.version, self.repoUrl[:-4], self.version) + \
             " ({})".format(date.today()) + '\n'
@@ -55,13 +65,20 @@ class Changelog:
         result = result + "\n---\n"
         return result
 
-    def saveToFile(self):
+    def saveToFile(self, location):
         #append file!
-        with open('CHANGELOG.md', 'r+') as file:
+        if location[-1] == '/':
+            location = location[:-1]
+        fn = location + '/CHANGELOG.md'
+        content = ''
+        try:
+            file = open(fn, 'r+')
             firstLine = file.readline()
             file.seek(len(firstLine), 0)
             content = file.read()
-            file.seek(0, 0)
-            file.write("# Changelog \n\n")
-            file.write(str(self))
-            file.write(content)
+        except FileNotFoundError:
+            file = open(fn, 'w')   
+        file.seek(0, 0)
+        file.write("# Changelog \n\n")
+        file.write(str(self))
+        file.write(content)
