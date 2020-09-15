@@ -11,8 +11,10 @@ if __name__ == '__main__':
         print(usage)
         sys.exit()
     repo = Git(sys.argv[1])
-    commits = repo.getCommits()
+    latestTag = repo.getLastTag()
+    commits = repo.getCommits(latestTag)
     changelog = Changelog(sys.argv[2], repo.getURL())
     changelog.parse(commits)
     changelog.saveToFile(sys.argv[1])
+    
 

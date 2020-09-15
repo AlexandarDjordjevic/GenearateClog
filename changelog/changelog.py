@@ -82,3 +82,4 @@ class Changelog:
         file.write("# Changelog \n\n")
         file.write(str(self))
         file.write(content)
+        

@@ -21,14 +21,25 @@ class Git:
                     url = 'https://' + server + '/' + repo
             return url
 
-    def getCommits(self):
-        process = subprocess.Popen(['git', 'log', '--pretty=tformat:"{\"Sha\":\"%h\", \"Message\":\"%B\"}"'],
+    def getCommits(self, lastTag):
+        process = subprocess.Popen(['git', 'log', '--pretty=tformat:"{\"Sha\":\"%h\", \"Message\":\"%B\"}"', '{}..HEAD'.format(lastTag)],
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.directory)
         out, err = process.communicate()
         commits = []
         output = out.decode('utf-8').replace('\n','\\n').replace('}"\\n"{', '}, {').replace('"{','[{').replace('}"','}]')[:-2]
-        jsonCommits = json.loads(output)
-        for commit in jsonCommits:
-            commits.append(commit)    
-        return commits
+        print(output)
+        if output:
+            jsonCommits = json.loads(output)
+            for commit in jsonCommits:
+                commits.append(commit)    
+            return commits
+        else:
+            return ""
 
+    def getLastTag(self):
+        process = subprocess.Popen(['git',  'show-ref', '--tags'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.directory)
+        out, err = process.communicate()
+        tag = out.decode('utf-8').split('\n')[:-1][-1].split('/')[-1]
+        return tag
+        
+        
